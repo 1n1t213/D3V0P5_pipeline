@@ -1,0 +1,16 @@
+name: Gentoo CI/CD
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Gentoo emerge
+      run: |
+        docker run --rm -v $(pwd):/work gentoo/stage3:latest /bin/bash -c "emerge-webrsync && emerge -av sys-apps/openrc"
+    - name: Test OpenRC
+      run: echo "rc-service ssh start"  # Simulace
+    - uses: actions/upload-artifact@v4
+      with:
+        name: gentoo-artifacts
+        path: ./
